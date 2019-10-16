@@ -1,61 +1,87 @@
-public class RingBuffer {
-    double[] array;
-    int first;
-    int last;
-    int size;
-    public RingBuffer(int capacity){
-        this.array = new double[capacity];
-        this.first = 0;
-        this.last=0;
-        size =0;
+import java.util.*;
+import java.io.*;
+
+public class RingBuffer
+{
+    private int size = 0, front = 0;
+    private double[] queue;
+
+    public RingBuffer(int capacity)
+    {
+        queue = new double[capacity];
     }
 
-    public int size() {
+    public int size()
+    {
         return size;
     }
-    public boolean isEmpty(){
-        return size==0;
-    }
-    public boolean isFull() {
-        return size == this.array.length;
-    }
-    public void enqueue(double x) throws Exception {
-        if (size==array.length) throw new Exception("queue is full");
-        if (last==array.length) {
-            last = 0;
-            array[last] = x;
+
+    public boolean isEmpty()
+    {
+        if(size == 0)
+        {
+            return true;
         }
         else
         {
-            array[last++] = x;
+            return false;
         }
-        size++;
     }
-    public double dequeue() throws Exception {
-        if (size==0) throw new Exception("queue is empty");
-        if (first==array.length) {
-            first =0;
+
+    public boolean isFull()
+    {
+        if(size == queue.length)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void enqueue(double x)
+    {
+        if(this.isFull())
+        {
+            throw new IllegalStateException("Queue is full");
+        }
+        else
+        {
+            queue[(front+size) % queue.length] = x;
+            size++;
+        }
+    }
+
+    public double dequeue()
+    {
+        if(this.isEmpty())
+        {
+            throw new IllegalStateException("Queue is empty");
+        }
+        else
+        {
             size--;
-            return array[first];
+            int lastFront = front;
+            front = (front+1) % queue.length;
+            return queue[lastFront];
+        }
+    }
+
+    public double peek()
+    {
+        if(this.isEmpty())
+        {
+            throw new IllegalStateException("Queue is empty");
         }
         else
         {
-             size--;
-             return array[first++];
+            return queue[front];
         }
-
-    }
-    public double peek() throws Exception {
-        if (size==0) throw new Exception("queue is empty");
-        return array[first];
-
     }
     public void clear()
     {
-        first = 0;
-        last = 0;
-        size=0;
+        size = 0; front = 0;
     }
-
-
 }
+
