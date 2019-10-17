@@ -1,6 +1,3 @@
-import java.util.*;
-import java.io.*;
-
 public class RingBuffer
 {
     private int size = 0, front = 0;
